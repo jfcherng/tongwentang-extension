@@ -8,6 +8,7 @@ const getDict = async (dir: LangType, type: 'char' | 'phrase') => {
 };
 
 const createSrcPack = async ({ default: def, custom }: PrefWord): Promise<SrcPack> => {
+  console.log(`createSrcPack: ${JSON.stringify(custom)}`);
   return Promise.all([
     def.s2t.char ? getDict(LangType.s2t, 'char') : {},
     def.s2t.phrase ? getDict(LangType.s2t, 'phrase') : {},
@@ -20,10 +21,18 @@ let converter: Converter | undefined = undefined;
 let queue: Promise<Converter> | undefined = undefined;
 
 export const getConverter = async (): Promise<Converter> => {
+  const pref = await bgGetPref();
+
+  // dirty fix... because "getConverter" will be called multiple times
+  // ideally, "converter" and "queue" should be only set to undefined when settings are updated
+  if (pref.general.debugMode) {
+    converter = undefined;
+    queue = undefined;
+  }
+
   return converter
     ? Promise.resolve(converter)
     : (queue ??
-        (queue = bgGetPref()
-          .then(async pref => createSrcPack(pref.word))
+        (queue = createSrcPack(pref.word)
           .then(src => (converter = createConverterMap(src)))));
 };

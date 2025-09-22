@@ -29,6 +29,7 @@ export function mountRuntimeListener() {
         case 'DetectLang':
           return handleBgReqAction(action, detectLanguage(sender.tab!.id));
         case 'NodesText':
+          console.log('This is NodesText');
           return getConverter().then(async converter =>
             handleBgReqAction(
               action,
