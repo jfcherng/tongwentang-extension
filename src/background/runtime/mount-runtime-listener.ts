@@ -9,12 +9,13 @@ import { bgGetPref } from '../state/storage';
 import { getTargetByAutoConvert } from './handle-get-auto-convert';
 import { getTargetByFilter } from './handle-get-filter-target';
 import { getTarget } from './handle-get-target';
+import type { Runtime } from 'webextension-polyfill';
 
 /**
  * background message handler
  */
 export function mountRuntimeListener() {
-  browser.runtime.onMessage.addListener(async (message, sender) => {
+  browser.runtime.onMessage.addListener(async (message: unknown, sender: Runtime.MessageSender) => {
     const action = message as BgReqAction;
     bgLog('[BG_RECEIVE_REQ] req:', action, 'sender:', sender);
 

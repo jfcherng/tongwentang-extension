@@ -7,7 +7,7 @@ import type { CtState } from '../state';
 import { handleTextarea } from './handle-textarea';
 
 export const mountRuntimeListener = (state: CtState) => {
-  browser.runtime.onMessage.addListener(async message => {
+  browser.runtime.onMessage.addListener(async (message: unknown) => {
     const action = message as CtReqAction;
     dispatchBgAction({ type: 'Log', payload: ['[CT_RECEIVE_REQ]', action] });
 
